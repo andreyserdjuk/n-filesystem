@@ -1,0 +1,22 @@
+{
+  "name": "n-filesystem",
+  "version": "0.0.1",
+  "description": "The Filesystem module provides basic utilities for the filesystem. This is nodejs port of https://github.com/symfony/filesystem.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/andreyserdjuk/n-filesystem.git"
+  },
+  "keywords": [
+    "filesystem"
+  ],
+  "author": "Andrey Serdjuk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andreyserdjuk/n-filesystem/issues"
+  },
+  "homepage": "https://github.com/andreyserdjuk/n-filesystem#readme"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "n-filesystem",
+  "dependencies": {},
+  "globalDependencies": {
+    "node": "registry:env/node#6.0.0+20160902022231"
+  }
+}
