@@ -1,4 +1,4 @@
-// import {Filesystem} from '../Filesystem';
+import {Filesystem} from '../Filesystem';
 import assert = require('assert');
 import fs = require('fs');
 import cp = require('child_process');
