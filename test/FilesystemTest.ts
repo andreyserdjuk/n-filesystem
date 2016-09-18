@@ -10,12 +10,12 @@ describe('Filesystem.mkdir', function() {
   before((done) => { cleanup(done); filesystem.mkdir(['a', 'b', 'c'], 0o777, '');});
   after((done) => cleanup(done));
 
-  it('should create nested set of dirs', function() {
+  it('mkdir: create nested set of dirs', function() {
     let stat = fs.statSync('a/b/c');
     assert.ok(stat.isDirectory());
   });
 
-  it('created dirs should have 777 permissions', () => {
+  it('mkdir: created dirs should have 777 permissions', () => {
     //      S_IFMT     0170000   bit mask for the file type bit field
     //      S_IFSOCK   0140000   socket
     //      S_IFLNK    0120000   symbolic link
@@ -26,5 +26,12 @@ describe('Filesystem.mkdir', function() {
     //      S_IFIFO    0010000   FIFO
     let stat = fs.statSync('a/b/c');
     assert.equal(stat.mode.toString(8), '40777');
+  });
+
+  it ('copy: existence of copied file', () => {
+    before((done) => { fs.writeFileSync('./test_file', '1'); done(); });
+    after((done) => { fs.unlink('./test_file'); done(); });
+    filesystem.copy('./test_file', './test_file');
+    assert.ok(fs.statSync('./test_file').isFile());
   });
 });
