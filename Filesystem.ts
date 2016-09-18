@@ -2,25 +2,21 @@ import fs = require('fs');
 import touch = require('touch');
 
 export class Filesystem {
+
     /**
-     * Creates a directory recursively.
+     * Copies a file.
+     *
+     * If the target file is older than the origin file, it's always overwritten.
+     * If the target file is newer, it is overwritten only when the
+     * $overwriteNewerFiles option is set to true.
+     *
+     * @param string $originFile          The original filename
+     * @param string $targetFile          The target filename
+     * @param bool   $overwriteNewerFiles If true, target files newer than origin files are overwritten
+     *
+     * @throws Error When originFile doesn't exist
+     * @throws Error When copy fails
      */
-    public mkdir(dirs:Array<string>|string, mode:number = 0o777, root:string = '')
-    {
-        var path = root? root : __dirname;
-        dirs = this.makeIter(dirs);
-
-        for (let dir of dirs) {
-            path = path.replace(/\/+$/, '') + '/' + dir;
-            if (fs.existsSync(path)) {
-                continue;
-            }
-
-            fs.mkdirSync(path, mode);
-            fs.chmodSync(path, mode); // because mkdirSync uses only default mode
-        }
-    }
-
     public copy(originFile, targetFile, overwriteNewerFiles = false)
     {
         var originModified = fs.statSync(originFile).birthtime;
@@ -38,6 +34,37 @@ export class Filesystem {
         }
     }
 
+    /**
+     * Creates a directory recursively.
+     *
+     * @param string|array|\Traversable $dirs The directory path
+     * @param int                       $mode The directory mode
+     *
+     * @throws Error On any directory creation failure
+     */
+    public mkdir(dirs:Array<string>|string, mode:number = 0o777, root:string = '')
+    {
+        var path = root? root : __dirname;
+        dirs = this.makeIter(dirs);
+
+        for (let dir of dirs) {
+            path = path.replace(/\/+$/, '') + '/' + dir;
+            if (fs.existsSync(path)) {
+                continue;
+            }
+
+            fs.mkdirSync(path, mode);
+            fs.chmodSync(path, mode); // because mkdirSync uses only default mode
+        }
+    }
+
+    /**
+     * Checks the existence of files or directories.
+     *
+     * @param string|array|\Traversable files A filename, an array of files, or a \Traversable instance to check
+     *
+     * @return bool true if the file exists, false otherwise
+     */
     public exists(files:Array<string>|string)
     {
         files = this.makeIter(files);
@@ -53,6 +80,15 @@ export class Filesystem {
         return true;
     }
 
+    /**
+     * Sets access and modification time of file.
+     *
+     * @param string|array|\Traversable files A filename, an array of files, or a \Traversable instance to create
+     * @param int                       time  The touch time as a Unix timestamp
+     * @param int                       atime The access time as a Unix timestamp
+     *
+     * @throws Error When touch fails
+     */
     public touch(files:Array<string>|string, time:Date = null, atime:Date = null)
     {
         var options = {force: true},
@@ -71,12 +107,27 @@ export class Filesystem {
         }
     }
 
-    protected makeIter(arr:Array<any>|string)
+    /**
+     * Removes files or directories.
+     *
+     * @param string|array|\Traversable$files A filename, an array of files, or a \Traversable instance to remove
+     */
+    public remove(files:Array<string>|string)
     {
-        if (typeof arr === 'string' || typeof arr === 'number') {
-            arr = new Array(arr.toString());
+
+    }
+
+    /**
+     * @param mixed files
+     *
+     * @return traversable
+     */
+    protected makeIter(files:Array<any>|string)
+    {
+        if (typeof files === 'string' || typeof files === 'number') {
+            files = new Array(files.toString());
         }
 
-        return arr;
+        return files;
     }
 }
