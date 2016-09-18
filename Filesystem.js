@@ -21,5 +21,19 @@ class Filesystem {
         }
         fs.createReadStream(originFile).pipe(fs.createWriteStream(targetFile));
     }
+    exists(files) {
+        if (typeof files === 'string') {
+            files = new Array(files);
+        }
+        for (let file of files) {
+            try {
+                let stat = fs.statSync(file);
+            }
+            catch (e) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 exports.Filesystem = Filesystem;

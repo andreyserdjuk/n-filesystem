@@ -30,4 +30,11 @@ describe('Filesystem.mkdir', function () {
         filesystem.copy('./test_file', './test_file');
         assert.ok(fs.statSync('./test_file').isFile());
     });
+    it('exists: check list of files, single file', () => {
+        let files = ['package.json', 'README.md'];
+        let dirs = ['test'];
+        assert.ok(filesystem.exists(dirs));
+        assert.ok(filesystem.exists(files));
+        assert.notEqual(true, filesystem.exists('asldfjkalsd'));
+    });
 });
