@@ -1,5 +1,5 @@
 import fs = require('fs');
-import touch = require('touch');
+var touch = require('touch');
 
 export class Filesystem {
 
@@ -52,7 +52,7 @@ export class Filesystem {
             if (fs.existsSync(path)) {
                 continue;
             }
-
+            
             fs.mkdirSync(path, mode);
             fs.chmodSync(path, mode); // because mkdirSync uses only default mode
         }
@@ -114,7 +114,11 @@ export class Filesystem {
      */
     public remove(files:Array<string>|string)
     {
+        var filesList = this.makeIter(files);
 
+        for (let file of filesList) {
+            fs.unlinkSync(file);
+        }
     }
 
     /**

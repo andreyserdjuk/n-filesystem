@@ -4,7 +4,7 @@ const assert = require('assert');
 const fs = require('fs');
 const cp = require('child_process');
 var filesystem = new Filesystem_1.Filesystem();
-describe('Filesystem.mkdir', function () {
+describe('Filesystem', function () {
     var cleanup = () => { cp.exec('rm -rf a'); };
     before((done) => {
         cleanup();
@@ -14,8 +14,14 @@ describe('Filesystem.mkdir', function () {
     });
     after((done) => {
         cleanup();
-        fs.unlink('./test_file1');
-        fs.unlink('./test_file2');
+        try {
+            fs.unlinkSync('./test_file1');
+        }
+        catch (e) { }
+        try {
+            fs.unlinkSync('./test_file2');
+        }
+        catch (e) { }
         done();
     });
     it('mkdir: create nested set of dirs', function () {
@@ -61,5 +67,10 @@ describe('Filesystem.mkdir', function () {
             let stat = fs.statSync(file);
             assert.equal(stat.atime.getSeconds() - 10, stat.mtime.getSeconds());
         }
+    });
+    it('remove: remove list of files', () => {
+        filesystem.remove(['./test_file1', './test_file2']);
+        assert.ok(!fs.existsSync('./test_file1'));
+        assert.ok(!fs.existsSync('./test_file2'));
     });
 });

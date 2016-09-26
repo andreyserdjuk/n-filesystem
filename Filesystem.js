@@ -1,6 +1,6 @@
 "use strict";
 const fs = require('fs');
-const touch = require('touch');
+var touch = require('touch');
 class Filesystem {
     /**
      * Copies a file.
@@ -94,6 +94,10 @@ class Filesystem {
      * @param string|array|\Traversable$files A filename, an array of files, or a \Traversable instance to remove
      */
     remove(files) {
+        var filesList = this.makeIter(files);
+        for (let file of filesList) {
+            fs.unlinkSync(file);
+        }
     }
     /**
      * @param mixed files
