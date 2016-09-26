@@ -122,6 +122,29 @@ export class Filesystem {
     }
 
     /**
+     * Change mode for an array of files or directories.
+     *
+     * @param string|array|\Traversable files     A filename, an array of files, or a \Traversable instance to change mode
+     * @param int                       mode      The new mode (octal)
+     * @param int                       umask     The mode mask (octal)
+     * @param bool                      recursive Whether change the mod recursively or not
+     *
+     * @throws IOException When the change fail
+     */
+    public chmod(files:Array<string>|string, mode, umask = 0o000, recursive = false)
+    {
+        var filesList = this.makeIter(files);
+
+        for (let file of filesList) {
+            if (fs.statSync(file).isDirectory) {
+                // todo: get nested list of objects and call recursively
+                // this.chmod(nestedList);
+            }
+            fs.chmodSync(file, mode & ~umask);
+        }
+    }
+
+    /**
      * @param mixed files
      *
      * @return traversable
