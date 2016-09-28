@@ -1,3 +1,4 @@
+import * as readline from 'readline';
 import fs = require('fs');
 var touch = require('touch');
 
@@ -136,11 +137,12 @@ export class Filesystem {
         var filesList = this.makeIter(files);
 
         for (let file of filesList) {
-            if (fs.statSync(file).isDirectory) {
-                // todo: get nested list of objects and call recursively
-                // this.chmod(nestedList);
-            }
             fs.chmodSync(file, mode & ~umask);
+
+            if (fs.statSync(file).isDirectory && recursive) {
+                let dirs = fs.readdirSync(file);
+                this.chmodSync(dirs, mode, umask, recursive);
+            }
         }
     }
 
@@ -153,6 +155,10 @@ export class Filesystem {
     {
         if (typeof files === 'string' || typeof files === 'number') {
             files = new Array(files.toString());
+        }
+
+        if (!Array.isArray(files)) {
+            files = [];
         }
 
         return files;
