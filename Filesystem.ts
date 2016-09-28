@@ -17,7 +17,7 @@ export class Filesystem {
      * @throws Error When originFile doesn't exist
      * @throws Error When copy fails
      */
-    public copy(originFile, targetFile, overwriteNewerFiles = false)
+    public copySync(originFile, targetFile, overwriteNewerFiles = false)
     {
         var originModified = fs.statSync(originFile).birthtime;
 
@@ -42,7 +42,7 @@ export class Filesystem {
      *
      * @throws Error On any directory creation failure
      */
-    public mkdir(dirs:Array<string>|string, mode:number = 0o777, root:string = '')
+    public mkdirSync(dirs:Array<string>|string, mode:number = 0o777, root:string = '')
     {
         var path = root? root : __dirname;
         dirs = this.makeIter(dirs);
@@ -65,7 +65,7 @@ export class Filesystem {
      *
      * @return bool true if the file exists, false otherwise
      */
-    public exists(files:Array<string>|string)
+    public existsSync(files:Array<string>|string)
     {
         files = this.makeIter(files);
         
@@ -89,7 +89,7 @@ export class Filesystem {
      *
      * @throws Error When touch fails
      */
-    public touch(files:Array<string>|string, time:Date = null, atime:Date = null)
+    public touchSync(files:Array<string>|string, time:Date = null, atime:Date = null)
     {
         var options = {force: true},
             filesList = this.makeIter(files);
@@ -112,7 +112,7 @@ export class Filesystem {
      *
      * @param string|array|\Traversable$files A filename, an array of files, or a \Traversable instance to remove
      */
-    public remove(files:Array<string>|string)
+    public removeSync(files:Array<string>|string)
     {
         var filesList = this.makeIter(files);
 
@@ -131,7 +131,7 @@ export class Filesystem {
      *
      * @throws IOException When the change fail
      */
-    public chmod(files:Array<string>|string, mode, umask = 0o000, recursive = false)
+    public chmodSync(files:Array<string>|string, mode, umask = 0o000, recursive = false)
     {
         var filesList = this.makeIter(files);
 

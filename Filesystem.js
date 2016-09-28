@@ -16,7 +16,7 @@ class Filesystem {
      * @throws Error When originFile doesn't exist
      * @throws Error When copy fails
      */
-    copy(originFile, targetFile, overwriteNewerFiles = false) {
+    copySync(originFile, targetFile, overwriteNewerFiles = false) {
         var originModified = fs.statSync(originFile).birthtime;
         try {
             var targetModified = fs.statSync(targetFile).birthtime;
@@ -36,7 +36,7 @@ class Filesystem {
      *
      * @throws Error On any directory creation failure
      */
-    mkdir(dirs, mode = 0o777, root = '') {
+    mkdirSync(dirs, mode = 0o777, root = '') {
         var path = root ? root : __dirname;
         dirs = this.makeIter(dirs);
         for (let dir of dirs) {
@@ -55,7 +55,7 @@ class Filesystem {
      *
      * @return bool true if the file exists, false otherwise
      */
-    exists(files) {
+    existsSync(files) {
         files = this.makeIter(files);
         for (let file of files) {
             try {
@@ -76,7 +76,7 @@ class Filesystem {
      *
      * @throws Error When touch fails
      */
-    touch(files, time = null, atime = null) {
+    touchSync(files, time = null, atime = null) {
         var options = { force: true }, filesList = this.makeIter(files);
         if (null !== time) {
             options['time'] = time;
@@ -93,7 +93,7 @@ class Filesystem {
      *
      * @param string|array|\Traversable$files A filename, an array of files, or a \Traversable instance to remove
      */
-    remove(files) {
+    removeSync(files) {
         var filesList = this.makeIter(files);
         for (let file of filesList) {
             fs.unlinkSync(file);
@@ -109,7 +109,7 @@ class Filesystem {
      *
      * @throws IOException When the change fail
      */
-    chmod(files, mode, umask = 0o000, recursive = false) {
+    chmodSync(files, mode, umask = 0o000, recursive = false) {
         var filesList = this.makeIter(files);
         for (let file of filesList) {
             if (fs.statSync(file).isDirectory) {

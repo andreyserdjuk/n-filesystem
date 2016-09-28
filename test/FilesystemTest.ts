@@ -20,8 +20,8 @@ describe('Filesystem', function() {
     done(); 
   });
 
-  it('mkdir: create nested set of dirs', function() {
-    filesystem.mkdir(['a', 'b', 'c'], 0o777, '');
+  it('mkdirSync: create nested set of dirs', function() {
+    filesystem.mkdirSync(['a', 'b', 'c'], 0o777, '');
     let stat = fs.statSync('a/b/c');
     assert.ok(stat.isDirectory());
   });
@@ -34,25 +34,25 @@ describe('Filesystem', function() {
   //      S_IFDIR    0040000   directory --->>> we got this
   //      S_IFCHR    0020000   character device
   //      S_IFIFO    0010000   FIFO
-  it('mkdir: created dirs should have 777 permissions', () => {
+  it('mkdirSync: created dirs should have 777 permissions', () => {
     let stat = fs.statSync('a/b/c');
     assert.equal(stat.mode.toString(8), '40777');
   });
 
-  it ('copy: existence of copied file', () => {
-    filesystem.copy('./test_file1', './test_file2');
+  it('copySync: existence of copied file', () => {
+    filesystem.copySync('./test_file1', './test_file2');
     assert.ok(fs.statSync('./test_file1').isFile());
   });
 
-  it('exists: check list of files, single file', () => {
+  it('existsSync: check list of files, single file', () => {
     let files = ['package.json', 'README.md'];
     let dirs = ['test'];
-    assert.ok(filesystem.exists(dirs));
-    assert.ok(filesystem.exists(files));
-    assert.notEqual(true, filesystem.exists('asldfjkalsd'));
+    assert.ok(filesystem.existsSync(dirs));
+    assert.ok(filesystem.existsSync(files));
+    assert.notEqual(true, filesystem.existsSync('asldfjkalsd'));
   });
 
-  it('touch: array of files - atime, mtime', () => {
+  it('touchSync: array of files - atime, mtime', () => {
     let files = ['touch_file1', 'touch_file2'];
     after((done) => {
       for (let file of files)
@@ -65,14 +65,14 @@ describe('Filesystem', function() {
     atime.setSeconds(mtime.getSeconds() + 10);
 
     for (let file of files) {
-      filesystem.touch(file, mtime, atime);
+      filesystem.touchSync(file, mtime, atime);
       let stat = fs.statSync(file);
       assert.equal(stat.atime.getSeconds() - 10, stat.mtime.getSeconds());
     }
   });
 
-  it('remove: remove list of files', () => {
-    filesystem.remove(['./test_file1', './test_file2']);
+  it('removeSync: remove list of files', () => {
+    filesystem.removeSync(['./test_file1', './test_file2']);
     assert.ok(!fs.existsSync('./test_file1'));
     assert.ok(!fs.existsSync('./test_file2'));
   });
