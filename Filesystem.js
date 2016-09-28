@@ -112,9 +112,11 @@ class Filesystem {
     chmodSync(files, mode, umask = 0o000, recursive = false) {
         var filesList = this.makeIter(files);
         for (let file of filesList) {
-            if (fs.statSync(file).isDirectory) {
-            }
             fs.chmodSync(file, mode & ~umask);
+            if (fs.statSync(file).isDirectory && recursive) {
+                let dirs = fs.readdirSync(file);
+                this.chmodSync(dirs, mode, umask, recursive);
+            }
         }
     }
     /**
@@ -125,6 +127,9 @@ class Filesystem {
     makeIter(files) {
         if (typeof files === 'string' || typeof files === 'number') {
             files = new Array(files.toString());
+        }
+        if (!Array.isArray(files)) {
+            files = [];
         }
         return files;
     }
