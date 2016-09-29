@@ -18,7 +18,7 @@ export class Filesystem {
      * @throws Error When originFile doesn't exist
      * @throws Error When copy fails
      */
-    public copySync(originFile, targetFile, overwriteNewerFiles = false)
+    public copySync(originFile:string, targetFile:string, overwriteNewerFiles:boolean = false)
     {
         var originModified = fs.statSync(originFile).birthtime;
 
@@ -132,7 +132,7 @@ export class Filesystem {
      *
      * @throws IOException When the change fail
      */
-    public chmodSync(files:Array<string>|string, mode, umask = 0o000, recursive = false)
+    public chmodSync(files:Array<string>|string, mode:number, umask = 0o000, recursive = false)
     {
         var filesList = this.makeIter(files);
 
