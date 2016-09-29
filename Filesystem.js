@@ -115,7 +115,7 @@ class Filesystem {
             fs.chmodSync(file, mode & ~umask);
             if (fs.statSync(file).isDirectory && recursive) {
                 let dirs = fs.readdirSync(file);
-                this.chmodSync(dirs, mode, umask, recursive);
+                this.chmodSync(dirs.map((dir) => file + '/' + dir), mode, umask, recursive);
             }
         }
     }

@@ -76,4 +76,15 @@ describe('Filesystem', function() {
     assert.ok(!fs.existsSync('./test_file1'));
     assert.ok(!fs.existsSync('./test_file2'));
   });
+
+  it('chmodSync', () => {
+    filesystem.chmodSync('a', 0o755);
+    assert.equal(fs.statSync('a').mode.toString(8), '40755');
+    assert.equal(fs.statSync('a/b').mode.toString(8), '40777');
+    assert.equal(fs.statSync('a/b/c').mode.toString(8), '40777');
+    filesystem.chmodSync('a', 0o755, 0o000, true);
+    assert.equal(fs.statSync('a').mode.toString(8), '40755');
+    assert.equal(fs.statSync('a/b').mode.toString(8), '40755');
+    assert.equal(fs.statSync('a/b/c').mode.toString(8), '40755');
+  });
 });
