@@ -1,7 +1,7 @@
 "use strict";
 const fs = require('fs');
-var touch = require('touch');
-var userid = require('userid');
+let touch = require('touch');
+let userid = require('userid');
 class Filesystem {
     /**
      * Copies a file.
@@ -18,7 +18,7 @@ class Filesystem {
      * @throws Error When copy fails
      */
     copySync(originFile, targetFile, overwriteNewerFiles = false) {
-        var originModified = fs.statSync(originFile).birthtime;
+        let originModified = fs.statSync(originFile).birthtime;
         try {
             var targetModified = fs.statSync(targetFile).birthtime;
         }
@@ -38,7 +38,7 @@ class Filesystem {
      * @throws Error On any directory creation failure
      */
     mkdirSync(dirs, mode = 0o777, root = '') {
-        var path = root ? root : __dirname;
+        let path = root ? root : __dirname;
         dirs = this.makeIter(dirs);
         for (let dir of dirs) {
             path = path.replace(/\/+$/, '') + '/' + dir;
@@ -78,7 +78,7 @@ class Filesystem {
      * @throws Error When touch fails
      */
     touchSync(files, time = null, atime = null) {
-        var options = { force: true }, filesList = this.makeIter(files);
+        let options = { force: true }, filesList = this.makeIter(files);
         if (null !== time) {
             options['time'] = time;
         }
@@ -95,7 +95,7 @@ class Filesystem {
      * @param string|array|\Traversable$files A filename, an array of files, or a \Traversable instance to remove
      */
     removeSync(files) {
-        var filesList = this.makeIter(files);
+        let filesList = this.makeIter(files);
         for (let file of filesList) {
             fs.unlinkSync(file);
         }
@@ -111,7 +111,7 @@ class Filesystem {
      * @throws IOException When the change fail
      */
     chmodSync(files, mode, umask = 0o000, recursive = false) {
-        var filesList = this.makeIter(files);
+        let filesList = this.makeIter(files);
         for (let file of filesList) {
             fs.chmodSync(file, mode & ~umask);
             if (fs.statSync(file).isDirectory && recursive) {
@@ -130,7 +130,7 @@ class Filesystem {
      * @throws IOException When the change fail
      */
     chownSync(files, user, recursive = false) {
-        var filesList = this.makeIter(files);
+        let filesList = this.makeIter(files);
         let uid = Number.isInteger(user) ? user : userid.uid(user);
         for (let file of filesList) {
             let stat = fs.statSync(file);

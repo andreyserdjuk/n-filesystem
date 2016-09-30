@@ -1,7 +1,7 @@
 import * as readline from 'readline';
 import fs = require('fs');
-var touch = require('touch');
-var userid = require('userid');
+let touch = require('touch');
+let userid = require('userid');
 
 export class Filesystem {
 
@@ -21,7 +21,7 @@ export class Filesystem {
      */
     public copySync(originFile:string, targetFile:string, overwriteNewerFiles:boolean = false)
     {
-        var originModified = fs.statSync(originFile).birthtime;
+        let originModified = fs.statSync(originFile).birthtime;
 
         try {
             var targetModified = fs.statSync(targetFile).birthtime;
@@ -46,7 +46,7 @@ export class Filesystem {
      */
     public mkdirSync(dirs:Array<string>|string, mode:number = 0o777, root:string = '')
     {
-        var path = root? root : __dirname;
+        let path = root? root : __dirname;
         dirs = this.makeIter(dirs);
 
         for (let dir of dirs) {
@@ -93,7 +93,7 @@ export class Filesystem {
      */
     public touchSync(files:Array<string>|string, time:Date = null, atime:Date = null)
     {
-        var options = {force: true},
+        let options = {force: true},
             filesList = this.makeIter(files);
 
         if (null !== time) {
@@ -116,7 +116,7 @@ export class Filesystem {
      */
     public removeSync(files:Array<string>|string)
     {
-        var filesList = this.makeIter(files);
+        let filesList = this.makeIter(files);
 
         for (let file of filesList) {
             fs.unlinkSync(file);
@@ -135,7 +135,7 @@ export class Filesystem {
      */
     public chmodSync(files:Array<string>|string, mode:number, umask:number = 0o000, recursive:boolean = false)
     {
-        var filesList = this.makeIter(files);
+        let filesList = this.makeIter(files);
 
         for (let file of filesList) {
             fs.chmodSync(file, mode & ~umask);
@@ -158,7 +158,7 @@ export class Filesystem {
      */
     public chownSync(files:Array<string>|string, user:any, recursive:boolean = false)
     {
-        var filesList = this.makeIter(files);
+        let filesList = this.makeIter(files);
         let uid = Number.isInteger(user)? user : userid.uid(user);
 
         for (let file of filesList) {
