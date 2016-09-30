@@ -1,6 +1,7 @@
 "use strict";
 const fs = require('fs');
 var touch = require('touch');
+var userid = require('userid');
 class Filesystem {
     /**
      * Copies a file.
@@ -116,6 +117,27 @@ class Filesystem {
             if (fs.statSync(file).isDirectory && recursive) {
                 let dirs = fs.readdirSync(file);
                 this.chmodSync(dirs.map((dir) => file + '/' + dir), mode, umask, recursive);
+            }
+        }
+    }
+    /**
+     * Change the owner of an array of files or directories.
+     *
+     * @param string|array|\Traversable files     A filename, an array of files, or a \Traversable instance to change owner
+     * @param string                    user      The new owner user name
+     * @param bool                      recursive Whether change the owner recursively or not
+     *
+     * @throws IOException When the change fail
+     */
+    chownSync(files, user, recursive = false) {
+        var filesList = this.makeIter(files);
+        let uid = Number.isInteger(user) ? user : userid.uid(user);
+        for (let file of filesList) {
+            let stat = fs.statSync(file);
+            fs.chownSync(file, uid, stat.gid);
+            if (stat.isDirectory && recursive) {
+                let dirs = fs.readdirSync(file);
+                this.chownSync(dirs.map((dir) => file + '/' + dir), uid, recursive);
             }
         }
     }

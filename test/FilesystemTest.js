@@ -3,6 +3,7 @@ const Filesystem_1 = require('../Filesystem');
 const assert = require('assert');
 const fs = require('fs');
 const cp = require('child_process');
+var userid = require('userid');
 var filesystem = new Filesystem_1.Filesystem();
 describe('Filesystem', function () {
     var cleanup = () => { cp.exec('rm -rf a'); };
@@ -82,5 +83,10 @@ describe('Filesystem', function () {
         assert.equal(fs.statSync('a').mode.toString(8), '40755');
         assert.equal(fs.statSync('a/b').mode.toString(8), '40755');
         assert.equal(fs.statSync('a/b/c').mode.toString(8), '40755');
+    });
+    it('chownSync', () => {
+        let uid = userid.uid('www-data');
+        filesystem.chownSync('a', 'www-data', true);
+        assert.equal(fs.statSync('/a').uid, uid);
     });
 });

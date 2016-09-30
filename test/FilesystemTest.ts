@@ -2,6 +2,7 @@ import {Filesystem} from '../Filesystem';
 import assert = require('assert');
 import fs = require('fs');
 import cp = require('child_process');
+var userid = require('userid');
 
 var filesystem = new Filesystem();
 
@@ -86,5 +87,11 @@ describe('Filesystem', function() {
     assert.equal(fs.statSync('a').mode.toString(8), '40755');
     assert.equal(fs.statSync('a/b').mode.toString(8), '40755');
     assert.equal(fs.statSync('a/b/c').mode.toString(8), '40755');
+  });
+
+  it('chownSync', () => {
+    let uid = userid.uid('www-data');
+    filesystem.chownSync('a', 'www-data', true);
+    assert.equal(fs.statSync('/a').uid, uid);
   });
 });

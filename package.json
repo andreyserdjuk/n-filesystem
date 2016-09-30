@@ -24,6 +24,7 @@
     "mocha": "^3.0.2"
   },
   "dependencies": {
-    "touch": "^1.0.0"
+    "touch": "^1.0.0",
+    "userid": "^0.2.0"
   }
 }

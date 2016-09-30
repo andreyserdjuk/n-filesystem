@@ -1,6 +1,7 @@
 import * as readline from 'readline';
 import fs = require('fs');
 var touch = require('touch');
+var userid = require('userid');
 
 export class Filesystem {
 
@@ -132,7 +133,7 @@ export class Filesystem {
      *
      * @throws IOException When the change fail
      */
-    public chmodSync(files:Array<string>|string, mode:number, umask = 0o000, recursive = false)
+    public chmodSync(files:Array<string>|string, mode:number, umask:number = 0o000, recursive:boolean = false)
     {
         var filesList = this.makeIter(files);
 
@@ -142,6 +143,31 @@ export class Filesystem {
             if (fs.statSync(file).isDirectory && recursive) {
                 let dirs = fs.readdirSync(file);
                 this.chmodSync(dirs.map((dir) => file + '/' + dir), mode, umask, recursive);
+            }
+        }
+    }
+
+    /**
+     * Change the owner of an array of files or directories.
+     *
+     * @param string|array|\Traversable files     A filename, an array of files, or a \Traversable instance to change owner
+     * @param string                    user      The new owner user name
+     * @param bool                      recursive Whether change the owner recursively or not
+     *
+     * @throws IOException When the change fail
+     */
+    public chownSync(files:Array<string>|string, user:any, recursive:boolean = false)
+    {
+        var filesList = this.makeIter(files);
+        let uid = Number.isInteger(user)? user : userid.uid(user);
+
+        for (let file of filesList) {
+            let stat = fs.statSync(file);
+            fs.chownSync(file, uid, stat.gid);
+
+            if (stat.isDirectory && recursive) {
+                let dirs = fs.readdirSync(file);
+                this.chownSync(dirs.map((dir) => file + '/' + dir), uid, recursive);
             }
         }
     }
