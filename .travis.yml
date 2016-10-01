@@ -3,4 +3,4 @@ node_js:
     - "6"
     - "6.5"
 before_install:
-    - id -u www-data &>/dev/null || useradd -m www-data
+    - useradd -u 999 n-test

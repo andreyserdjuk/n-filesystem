@@ -1,7 +1,6 @@
 import * as readline from 'readline';
 import fs = require('fs');
 let touch = require('touch');
-let userid = require('userid');
 
 export class Filesystem {
 
@@ -151,15 +150,14 @@ export class Filesystem {
      * Change the owner of an array of files or directories.
      *
      * @param string|array|\Traversable files     A filename, an array of files, or a \Traversable instance to change owner
-     * @param string                    user      The new owner user name
+     * @param number                    user      The new owner user name
      * @param bool                      recursive Whether change the owner recursively or not
      *
      * @throws IOException When the change fail
      */
-    public chownSync(files:Array<string>|string, user:any, recursive:boolean = false)
+    public chownSync(files:Array<string>|string, uid:number, recursive:boolean = false)
     {
         let filesList = this.makeIter(files);
-        let uid = Number.isInteger(user)? user : userid.uid(user);
 
         for (let file of filesList) {
             let stat = fs.statSync(file);

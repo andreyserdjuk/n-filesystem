@@ -2,7 +2,6 @@ import {Filesystem} from '../Filesystem';
 import assert = require('assert');
 import fs = require('fs');
 import cp = require('child_process');
-let userid = require('userid');
 let filesystem = new Filesystem();
 let TMPDIR = process.env.TMPDIR;
 
@@ -90,8 +89,7 @@ describe('Filesystem', function() {
   });
 
   it('chownSync', () => {
-    let uid = userid.uid('www-data');
-    filesystem.chownSync(TMPDIR + 'a', 'www-data', true);
-    assert.equal(fs.statSync(TMPDIR + '/a').uid, uid);
+    filesystem.chownSync(TMPDIR + 'a', 999, true);
+    assert.equal(fs.statSync(TMPDIR + '/a').uid, 999);
   });
 });
