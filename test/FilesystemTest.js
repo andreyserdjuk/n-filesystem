@@ -3,8 +3,9 @@ const Filesystem_1 = require('../Filesystem');
 const assert = require('assert');
 const fs = require('fs');
 const cp = require('child_process');
+const os = require('os');
 let filesystem = new Filesystem_1.Filesystem();
-let TMPDIR = process.env.TMPDIR;
+let TMPDIR = os.tmpdir();
 describe('Filesystem', function () {
     var cleanup = () => { cp.exec('rm -rf ' + TMPDIR + 'a'); };
     before((done) => {

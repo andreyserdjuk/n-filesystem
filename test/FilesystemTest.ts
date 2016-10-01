@@ -2,8 +2,9 @@ import {Filesystem} from '../Filesystem';
 import assert = require('assert');
 import fs = require('fs');
 import cp = require('child_process');
+import os = require('os');
 let filesystem = new Filesystem();
-let TMPDIR = process.env.TMPDIR;
+let TMPDIR = os.tmpdir();
 
 describe('Filesystem', function() {
   var cleanup = () => { cp.exec('rm -rf ' + TMPDIR + 'a'); };
