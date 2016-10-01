@@ -68,7 +68,12 @@ describe('Filesystem', function() {
     for (let file of files) {
       filesystem.touchSync(file, mtime, atime);
       let stat = fs.statSync(file);
-      assert.equal(stat.atime.getSeconds() - 10, stat.mtime.getSeconds());
+      let statAtimeSec = stat.atime.getSeconds();
+      let statMtimeSec = stat.mtime.getSeconds();
+
+      assert.equal(atime.getSeconds(), statAtimeSec);
+      assert.equal(mtime.getSeconds(), statMtimeSec);
+      assert.equal(atime.getSeconds(), statMtimeSec + 10);
     }
   });
 
