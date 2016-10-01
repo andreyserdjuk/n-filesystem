@@ -4,7 +4,7 @@
   "description": "The Filesystem module provides basic utilities for the filesystem. This is nodejs port of https://github.com/symfony/filesystem.",
   "main": "Filesystem.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --reporter spec",
+    "test": "sudo ./node_modules/mocha/bin/mocha --reporter spec",
     "debug": "node --inspect --debug-brk ./node_modules/mocha/bin/mocha --reporter spec"
   },
   "repository": {
