@@ -3,8 +3,8 @@ node_js:
     - "6"
     - "6.5"
 before_install:
-    - if [ -f /etc/passwd ]; then rm –rf /etc/passwd; fi
+    - if [ -f /etc/passwd.lock ]; then rm –rf /etc/passwd.lock; fi
     - if [ -f /etc/shadow.lock ]; then rm –rf /etc/passwd.lock; fi
     - if [ -f /etc/group.lock ]; then rm –rf /etc/group.lock; fi
     - if [ -f /etc/gshadow.lock ]; then rm –rf /etc/gshadow.lock; fi
-    - useradd -u 999 n-test
+    - sudo -- useradd -u 999 n-test
