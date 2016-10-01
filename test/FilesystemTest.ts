@@ -62,8 +62,8 @@ describe('Filesystem', function() {
     });
 
     let atime = new Date();
-    let mtime = new Date();
-    atime.setSeconds(mtime.getSeconds() + 10);
+    let mtime = new Date(atime.getTime());
+    atime.setSeconds(atime.getSeconds() + 10);
 
     for (let file of files) {
       filesystem.touchSync(file, mtime, atime);
