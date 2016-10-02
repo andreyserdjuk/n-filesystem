@@ -63,17 +63,21 @@ describe('Filesystem', function() {
 
     let atime = new Date();
     let mtime = new Date(atime.getTime());
-    atime.setTime(atime.getTime() + 10);
+    // add 1000 miliseconds
+    atime.setTime(atime.getTime() + 1000);
+    let atimeSec = Math.floor(atime.getTime() / 1000);
+    let mtimeSec = Math.floor(mtime.getTime() / 1000);
 
     for (let file of files) {
       filesystem.touchSync(file, mtime, atime);
       let stat = fs.statSync(file);
-      let statAtime = stat.atime.getTime();
-      let statMtime = stat.mtime.getTime();
-
-      assert.equal(atime.getTime(), statAtime);
-      assert.equal(mtime.getTime(), statMtime);
-      assert.equal(atime.getTime(), statMtime + 10);
+      let statAtimeSec = Math.floor(stat.atime.getTime() / 1000);
+      let statMtimeSec = Math.floor(stat.mtime.getTime() / 1000);
+      let statMtimeSecPlus10Msec = Math.floor((stat.mtime.getTime() + 1000) / 1000);
+      
+      assert.equal(atimeSec, statAtimeSec);
+      assert.equal(mtimeSec, statMtimeSec);
+      assert.equal(atimeSec, statMtimeSecPlus10Msec);
     }
   });
 
