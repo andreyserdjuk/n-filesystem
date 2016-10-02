@@ -119,7 +119,7 @@ class Filesystem {
             else {
                 fs.chmodSync(file, mode & ~umask);
             }
-            if (recursive && stat.isDirectory && !stat.isSymbolicLink()) {
+            if (recursive && stat.isDirectory() && !stat.isSymbolicLink()) {
                 let dirs = fs.readdirSync(file);
                 this.chmodSync(dirs.map((dir) => file + '/' + dir), mode, umask, true);
             }
@@ -144,7 +144,7 @@ class Filesystem {
             else {
                 fs.chownSync(file, uid, stat.gid);
             }
-            if (recursive && stat.isDirectory && !stat.isSymbolicLink()) {
+            if (recursive && stat.isDirectory() && !stat.isSymbolicLink()) {
                 let dirs = fs.readdirSync(file);
                 this.chownSync(dirs.map((dir) => file + '/' + dir), uid, true);
             }
@@ -169,9 +169,9 @@ class Filesystem {
             else {
                 fs.chownSync(file, stat.uid, gid);
             }
-            if (recursive && stat.isDirectory && !stat.isSymbolicLink()) {
+            if (recursive && stat.isDirectory() && !stat.isSymbolicLink()) {
                 let dirs = fs.readdirSync(file);
-                this.chownSync(dirs.map((dir) => file + '/' + dir), gid, true);
+                this.chgrpSync(dirs.map((dir) => file + '/' + dir), gid, true);
             }
         }
     }

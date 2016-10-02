@@ -104,4 +104,16 @@ describe('Filesystem', function() {
     assert.equal(fs.statSync(TMPDIR + '/a/b').uid, 999);
     assert.equal(fs.statSync(TMPDIR + '/a/b/c').uid, 999);
   });
+
+  it('chgrpSync', () => {
+    try {
+      filesystem.chgrpSync(TMPDIR + '/a', 999, true);
+    } catch(e) {
+      console.log(e);
+      debugger;
+    }
+    assert.equal(fs.statSync(TMPDIR + '/a').gid, 999);
+    assert.equal(fs.statSync(TMPDIR + '/a/b').gid, 999);
+    assert.equal(fs.statSync(TMPDIR + '/a/b/c').gid, 999);
+  });
 });
