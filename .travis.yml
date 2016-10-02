@@ -9,3 +9,5 @@ before_install:
     - if [ -f /etc/group.lock ]; then rm –rf /etc/group.lock; fi
     - if [ -f /etc/gshadow.lock ]; then rm –rf /etc/gshadow.lock; fi
     - sudo -- useradd -u 999 n-test
+notifications:
+    email: false
