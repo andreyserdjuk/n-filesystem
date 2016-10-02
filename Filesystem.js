@@ -153,7 +153,7 @@ class Filesystem {
      *
      * @throws IOException When the change fail
      */
-    chgrp(files, gid, recursive = false) {
+    chgrpSync(files, gid, recursive = false) {
         let filesList = this.makeIter(files);
         for (let file of filesList) {
             let stat = fs.statSync(file);

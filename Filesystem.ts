@@ -184,7 +184,7 @@ export class Filesystem {
      *
      * @throws IOException When the change fail
      */
-    public chgrp(files:Array<string>|string, gid:number, recursive:boolean = false)
+    public chgrpSync(files:Array<string>|string, gid:number, recursive:boolean = false)
     {
         let filesList = this.makeIter(files);
 

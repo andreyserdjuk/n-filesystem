@@ -96,5 +96,7 @@ describe('Filesystem', function () {
     it('chownSync', () => {
         filesystem.chownSync(TMPDIR + '/a', 999, true);
         assert.equal(fs.statSync(TMPDIR + '/a').uid, 999);
+        assert.equal(fs.statSync(TMPDIR + '/a/b').uid, 999);
+        assert.equal(fs.statSync(TMPDIR + '/a/b/c').uid, 999);
     });
 });
