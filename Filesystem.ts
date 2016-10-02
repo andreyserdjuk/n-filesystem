@@ -137,11 +137,17 @@ export class Filesystem {
         let filesList = this.makeIter(files);
 
         for (let file of filesList) {
-            fs.chmodSync(file, mode & ~umask);
+            let stat = fs.statSync(file);
 
-            if (fs.statSync(file).isDirectory && recursive) {
+            if (stat.isSymbolicLink()) {
+                fs.lchmodSync(file, mode & ~umask);
+            } else {
+                fs.chmodSync(file, mode & ~umask);
+            }
+
+            if (recursive && stat.isDirectory && !stat.isSymbolicLink()) {
                 let dirs = fs.readdirSync(file);
-                this.chmodSync(dirs.map((dir) => file + '/' + dir), mode, umask, recursive);
+                this.chmodSync(dirs.map((dir) => file + '/' + dir), mode, umask, true);
             }
         }
     }
@@ -168,9 +174,9 @@ export class Filesystem {
                 fs.chownSync(file, uid, stat.gid);
             }
 
-            if (recursive && stat.isDirectory && !stat.isSymbolicLink) {
+            if (recursive && stat.isDirectory && !stat.isSymbolicLink()) {
                 let dirs = fs.readdirSync(file);
-                this.chownSync(dirs.map((dir) => file + '/' + dir), uid, recursive);
+                this.chownSync(dirs.map((dir) => file + '/' + dir), uid, true);
             }
         }
     }
@@ -197,9 +203,9 @@ export class Filesystem {
                 fs.chownSync(file, stat.uid, gid);
             }
 
-            if (recursive && stat.isDirectory && !stat.isSymbolicLink) {
+            if (recursive && stat.isDirectory && !stat.isSymbolicLink()) {
                 let dirs = fs.readdirSync(file);
-                this.chownSync(dirs.map((dir) => file + '/' + dir), gid, recursive);
+                this.chownSync(dirs.map((dir) => file + '/' + dir), gid, true);
             }
         }
     }
