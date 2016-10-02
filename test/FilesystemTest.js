@@ -63,15 +63,15 @@ describe('Filesystem', function () {
         });
         let atime = new Date();
         let mtime = new Date(atime.getTime());
-        atime.setSeconds(atime.getSeconds() + 10);
+        atime.setTime(atime.getTime() + 10);
         for (let file of files) {
             filesystem.touchSync(file, mtime, atime);
             let stat = fs.statSync(file);
-            let statAtimeSec = stat.atime.getSeconds();
-            let statMtimeSec = stat.mtime.getSeconds();
-            assert.equal(atime.getSeconds(), statAtimeSec);
-            assert.equal(mtime.getSeconds(), statMtimeSec);
-            assert.equal(atime.getSeconds(), statMtimeSec + 10);
+            let statAtime = stat.atime.getTime();
+            let statMtime = stat.mtime.getTime();
+            assert.equal(atime.getTime(), statAtime);
+            assert.equal(mtime.getTime(), statMtime);
+            assert.equal(atime.getTime(), statMtime + 10);
         }
     });
     it('removeSync: remove list of files', () => {

@@ -123,7 +123,7 @@ class Filesystem {
      * Change the owner of an array of files or directories.
      *
      * @param string|array|\Traversable files     A filename, an array of files, or a \Traversable instance to change owner
-     * @param number                    user      The new owner user name
+     * @param number                    user      The new owner user id
      * @param bool                      recursive Whether change the owner recursively or not
      *
      * @throws IOException When the change fail
@@ -132,10 +132,40 @@ class Filesystem {
         let filesList = this.makeIter(files);
         for (let file of filesList) {
             let stat = fs.statSync(file);
-            fs.chownSync(file, uid, stat.gid);
-            if (stat.isDirectory && recursive) {
+            if (stat.isSymbolicLink()) {
+                fs.lchownSync(file, uid, stat.gid);
+            }
+            else {
+                fs.chownSync(file, uid, stat.gid);
+            }
+            if (recursive && stat.isDirectory && !stat.isSymbolicLink) {
                 let dirs = fs.readdirSync(file);
                 this.chownSync(dirs.map((dir) => file + '/' + dir), uid, recursive);
+            }
+        }
+    }
+    /**
+     * Change the group of an array of files or directories.
+     *
+     * @param string|array|\Traversable files     A filename, an array of files, or a \Traversable instance to change group
+     * @param string                    gid       The group id
+     * @param bool                      recursive Whether change the group recursively or not
+     *
+     * @throws IOException When the change fail
+     */
+    chgrp(files, gid, recursive = false) {
+        let filesList = this.makeIter(files);
+        for (let file of filesList) {
+            let stat = fs.statSync(file);
+            if (stat.isSymbolicLink()) {
+                fs.lchownSync(file, stat.uid, gid);
+            }
+            else {
+                fs.chownSync(file, stat.uid, gid);
+            }
+            if (recursive && stat.isDirectory && !stat.isSymbolicLink) {
+                let dirs = fs.readdirSync(file);
+                this.chownSync(dirs.map((dir) => file + '/' + dir), gid, recursive);
             }
         }
     }
