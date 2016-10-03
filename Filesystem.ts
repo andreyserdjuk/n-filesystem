@@ -9,11 +9,11 @@ export class Filesystem {
      *
      * If the target file is older than the origin file, it's always overwritten.
      * If the target file is newer, it is overwritten only when the
-     * $overwriteNewerFiles option is set to true.
+     * overwriteNewerFiles option is set to true.
      *
-     * @param string $originFile          The original filename
-     * @param string $targetFile          The target filename
-     * @param bool   $overwriteNewerFiles If true, target files newer than origin files are overwritten
+     * @param string originFile          The original filename
+     * @param string targetFile          The target filename
+     * @param bool   overwriteNewerFiles If true, target files newer than origin files are overwritten
      *
      * @throws Error When originFile doesn't exist
      * @throws Error When copy fails
@@ -226,6 +226,26 @@ export class Filesystem {
         }
 
         return files;
+    }
+
+    /**
+     * Renames a file or a directory.
+     *
+     * @param string origin    The origin filename or directory
+     * @param string target    The new filename or directory
+     * @param bool   overwrite Whether to overwrite the target if it already exists
+     *
+     * @throws IOException When target file or directory already exists
+     * @throws IOException When origin cannot be renamed
+     */
+    public renameSync(origin, target, overwrite = false)
+    {
+        // we check that target does not exist
+        if (!overwrite && this.isReadable(target)) {
+            throw new Error('Cannot rename because the target "' + target + '" already exists.');
+        }
+
+        fs.renameSync(origin, target);
     }
 
     /**
