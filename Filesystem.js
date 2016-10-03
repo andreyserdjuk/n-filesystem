@@ -31,8 +31,8 @@ class Filesystem {
     /**
      * Creates a directory recursively.
      *
-     * @param string|array|\Traversable $dirs The directory path
-     * @param int                       $mode The directory mode
+     * @param string|array|\Traversable dirs The directory path
+     * @param int                       mode The directory mode
      *
      * @throws Error On any directory creation failure
      */
@@ -91,7 +91,7 @@ class Filesystem {
     /**
      * Removes files or directories.
      *
-     * @param string|array|\Traversable$files A filename, an array of files, or a \Traversable instance to remove
+     * @param string|array|\Traversable files A filename, an array of files, or a \Traversable instance to remove
      */
     removeSync(files) {
         let filesList = this.makeIter(files);
@@ -199,7 +199,7 @@ class Filesystem {
      * @throws IOException When target file or directory already exists
      * @throws IOException When origin cannot be renamed
      */
-    rename(origin, target, overwrite = false) {
+    renameSync(origin, target, overwrite = false) {
         // we check that target does not exist
         if (!overwrite && this.isReadable(target)) {
             throw new Error('Cannot rename because the target "' + target + '" already exists.');

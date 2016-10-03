@@ -38,8 +38,8 @@ export class Filesystem {
     /**
      * Creates a directory recursively.
      *
-     * @param string|array|\Traversable $dirs The directory path
-     * @param int                       $mode The directory mode
+     * @param string|array|\Traversable dirs The directory path
+     * @param int                       mode The directory mode
      *
      * @throws Error On any directory creation failure
      */
@@ -111,7 +111,7 @@ export class Filesystem {
     /**
      * Removes files or directories.
      *
-     * @param string|array|\Traversable$files A filename, an array of files, or a \Traversable instance to remove
+     * @param string|array|\Traversable files A filename, an array of files, or a \Traversable instance to remove
      */
     public removeSync(files:Array<string>|string)
     {
