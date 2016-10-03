@@ -227,4 +227,31 @@ export class Filesystem {
 
         return files;
     }
+
+    /**
+     * Tells whether a file exists and is readable.
+     *
+     * @param string filename Path to the file
+     *
+     * @throws IOException When windows path is longer than 258 characters
+     */
+    private isReadable(filename)
+    {
+        if (fs.existsSync(filename)) {
+            let stat = fs.statSync(filename);
+            if (stat.isDirectory()) {
+                return false;
+            }
+
+            try {
+                // cannot import fs.constants.R_OK
+                fs.accessSync(filename, 4);
+                return true;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        return false;
+    }
 }
