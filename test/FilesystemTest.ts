@@ -14,6 +14,7 @@ describe('Filesystem', function() {
     fs.writeFileSync(TMPDIR + '/test_file2', '1');
     done(); 
   });
+  
   after((done) => {
     cleanup();
     try { fs.unlinkSync(TMPDIR + '/test_file1'); } catch (e) {}
@@ -98,14 +99,14 @@ describe('Filesystem', function() {
     assert.equal(fs.statSync(TMPDIR + '/a/b/c').mode.toString(8), '40755');
   });
 
-  it('chownSync', () => {
+  it('chownSync: recursively', () => {
     filesystem.chownSync(TMPDIR + '/a', 999, true);
     assert.equal(fs.statSync(TMPDIR + '/a').uid, 999);
     assert.equal(fs.statSync(TMPDIR + '/a/b').uid, 999);
     assert.equal(fs.statSync(TMPDIR + '/a/b/c').uid, 999);
   });
 
-  it('chgrpSync', () => {
+  it('chgrpSync: recurisively', () => {
     filesystem.chgrpSync(TMPDIR + '/a', 999, true);
     assert.equal(fs.statSync(TMPDIR + '/a').gid, 999);
     assert.equal(fs.statSync(TMPDIR + '/a/b').gid, 999);
