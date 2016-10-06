@@ -105,4 +105,11 @@ describe('Filesystem', function () {
         assert.equal(fs.statSync(TMPDIR + '/a/b').gid, 999);
         assert.equal(fs.statSync(TMPDIR + '/a/b/c').gid, 999);
     });
+    it('chgrpSync: non-recurisively', () => {
+        filesystem.chgrpSync(TMPDIR + '/a', 888, true);
+        filesystem.chgrpSync(TMPDIR + '/a', 999);
+        assert.equal(fs.statSync(TMPDIR + '/a').gid, 999);
+        assert.notEqual(fs.statSync(TMPDIR + '/a/b').gid, 999);
+        assert.notEqual(fs.statSync(TMPDIR + '/a/b/c').gid, 999);
+    });
 });
