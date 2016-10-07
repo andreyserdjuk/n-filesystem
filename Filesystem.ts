@@ -2,7 +2,7 @@ import {ENOBUFS, EROFS} from 'constants';
 import * as readline from 'readline';
 import fs = require('fs');
 const touch = require('touch');
-const path = require('path');
+import path = require('path');
 
 export class Filesystem {
 
@@ -227,7 +227,7 @@ export class Filesystem {
         let isDirectory = false;
 
         try {
-            fs.fstatSync(dir);
+            fs.statSync(dir);
             isDirectory = true;
         } catch (e) {}
 

@@ -189,7 +189,7 @@ class Filesystem {
         let dir = path.dirname(filename);
         let isDirectory = false;
         try {
-            fs.fstatSync(dir);
+            fs.statSync(dir);
             isDirectory = true;
         }
         catch (e) { }
