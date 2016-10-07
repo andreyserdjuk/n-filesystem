@@ -1,6 +1,7 @@
 "use strict";
 const fs = require('fs');
-let touch = require('touch');
+const touch = require('touch');
+const path = require('path');
 class Filesystem {
     /**
      * Copies a file.
@@ -176,18 +177,34 @@ class Filesystem {
         }
     }
     /**
-     * @param mixed files
+     * Atomically dumps content into a file.
      *
-     * @return traversable
+     * @param string   filename The file to be written to
+     * @param string   content  The data to write into the file
+     * @param null|int mode     The file mode (octal). If null, file permissions are not modified
+     *
+     * @throws IOException If the file cannot be written to.
      */
-    makeIter(files) {
-        if (typeof files === 'string' || typeof files === 'number') {
-            files = new Array(files.toString());
+    dumpFileSync(filename, content, mode = 0o666) {
+        let dir = path.dirname(filename);
+        let isDirectory = false;
+        try {
+            let stat = fs.fstatSync(dir);
+            isDirectory = true;
         }
-        if (!Array.isArray(files)) {
-            files = [];
+        catch (e) { }
+        if (!isDirectory) {
+            this.mkdirSync(dir.split('/'));
         }
-        return files;
+        else {
+            try {
+                fs.accessSync(dir, fs.W_OK);
+            }
+            catch (e) {
+                throw new Error('Unable to write to the "' + dir + '" directory.');
+            }
+        }
+        fs.writeFileSync(filename, content, { mode: mode });
     }
     /**
      * Renames a file or a directory.
@@ -229,6 +246,20 @@ class Filesystem {
             }
         }
         return false;
+    }
+    /**
+     * @param mixed files
+     *
+     * @return traversable
+     */
+    makeIter(files) {
+        if (typeof files === 'string' || typeof files === 'number') {
+            files = new Array(files.toString());
+        }
+        if (!Array.isArray(files)) {
+            files = [];
+        }
+        return files;
     }
 }
 exports.Filesystem = Filesystem;

@@ -1,6 +1,8 @@
+import {ENOBUFS, EROFS} from 'constants';
 import * as readline from 'readline';
 import fs = require('fs');
-let touch = require('touch');
+const touch = require('touch');
+const path = require('path');
 
 export class Filesystem {
 
@@ -211,21 +213,35 @@ export class Filesystem {
     }
 
     /**
-     * @param mixed files
+     * Atomically dumps content into a file.
      *
-     * @return traversable
+     * @param string   filename The file to be written to
+     * @param string   content  The data to write into the file
+     * @param null|int mode     The file mode (octal). If null, file permissions are not modified
+     *
+     * @throws IOException If the file cannot be written to.
      */
-    protected makeIter(files:Array<any>|string)
+    public dumpFileSync(filename, content, mode = 0o666)
     {
-        if (typeof files === 'string' || typeof files === 'number') {
-            files = new Array(files.toString());
+        let dir = path.dirname(filename);
+        let isDirectory = false;
+
+        try {
+            let stat = fs.fstatSync(dir);
+            isDirectory = true;
+        } catch (e) {}
+
+        if (!isDirectory) {
+            this.mkdirSync(dir.split('/'));
+        } else {
+            try {
+                fs.accessSync(dir, fs.W_OK);
+            } catch (e) {
+                throw new Error('Unable to write to the "' + dir + '" directory.')
+            }
         }
 
-        if (!Array.isArray(files)) {
-            files = [];
-        }
-
-        return files;
+        fs.writeFileSync(filename, content, {mode: mode});
     }
 
     /**
@@ -273,5 +289,23 @@ export class Filesystem {
         }
 
         return false;
+    }
+
+    /**
+     * @param mixed files
+     *
+     * @return traversable
+     */
+    protected makeIter(files:Array<any>|string)
+    {
+        if (typeof files === 'string' || typeof files === 'number') {
+            files = new Array(files.toString());
+        }
+
+        if (!Array.isArray(files)) {
+            files = [];
+        }
+
+        return files;
     }
 }
