@@ -227,12 +227,14 @@ export class Filesystem {
         let isDirectory = false;
 
         try {
-            let stat = fs.fstatSync(dir);
+            fs.fstatSync(dir);
             isDirectory = true;
         } catch (e) {}
 
         if (!isDirectory) {
-            this.mkdirSync(dir.split('/'));
+            let dirs = dir.split('/');
+            let root = dirs.shift() == ''? '/' : '';
+            this.mkdirSync(dirs, mode, root);
         } else {
             try {
                 fs.accessSync(dir, fs.W_OK);

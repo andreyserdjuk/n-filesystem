@@ -113,11 +113,18 @@ describe('Filesystem', function() {
     assert.equal(fs.statSync(TMPDIR + '/a/b/c').gid, 999);
   });
 
-    it('chgrpSync: non-recurisively', () => {
+  it('chgrpSync: non-recurisively', () => {
     filesystem.chgrpSync(TMPDIR + '/a', 888, true);
     filesystem.chgrpSync(TMPDIR + '/a', 999);
     assert.equal(fs.statSync(TMPDIR + '/a').gid, 999);
     assert.notEqual(fs.statSync(TMPDIR + '/a/b').gid, 999);
     assert.notEqual(fs.statSync(TMPDIR + '/a/b/c').gid, 999);
   });
+
+  it('dumpFileSync', () => {
+    let path = TMPDIR + '/a/d/u/m/p.txt';
+    filesystem.dumpFileSync(path, 'node is cool', 0o755);
+    let stat = fs.statSync(path);
+    assert.equal(stat.mode.toString(8), '100755');
+  })
 });
