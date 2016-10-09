@@ -1,4 +1,3 @@
-import {ENOBUFS, EROFS} from 'constants';
 import * as readline from 'readline';
 import fs = require('fs');
 const touch = require('touch');
