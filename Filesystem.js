@@ -258,6 +258,16 @@ class Filesystem {
         if (typeof files === 'string' || typeof files === 'number') {
             files = new Array(files.toString());
         }
+        // if we have non-iterable object
+        if (typeof files[Symbol.iterator] !== 'function') {
+            files = (function* () {
+                for (let i in files) {
+                    if (files.hasOwnProperty(i)) {
+                        yield files[i];
+                    }
+                }
+            })();
+        }
         if (!Array.isArray(files)) {
             files = [];
         }

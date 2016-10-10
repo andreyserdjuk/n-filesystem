@@ -44,7 +44,7 @@ export class Filesystem {
      *
      * @throws Error On any directory creation failure
      */
-    public mkdirSync(dirs:Array<string>|string, mode:number = 0o777, root:string = '')
+    public mkdirSync(dirs:Iterable<string>, mode:number = 0o777, root:string = '')
     {
         let path = root? root : __dirname;
         dirs = this.makeIter(dirs);
@@ -67,7 +67,7 @@ export class Filesystem {
      *
      * @return bool true if the file exists, false otherwise
      */
-    public existsSync(files:Array<string>|string)
+    public existsSync(files:Iterable<string>)
     {
         files = this.makeIter(files);
         
@@ -297,10 +297,21 @@ export class Filesystem {
      *
      * @return traversable
      */
-    protected makeIter(files:Array<any>|string)
+    protected makeIter(files:Iterable<string>)
     {
         if (typeof files === 'string' || typeof files === 'number') {
             files = new Array(files.toString());
+        }
+
+        // if we have non-iterable object
+        if (typeof files[Symbol.iterator] !== 'function') {
+            files = (function* () {
+                for (let i in files) {
+                    if (files.hasOwnProperty(i)) {
+                        yield files[i]; 
+                    } 
+                } 
+            })();
         }
 
         if (!Array.isArray(files)) {
