@@ -1,4 +1,5 @@
 import {Filesystem} from '../Filesystem';
+import {DirectoryPath} from '../DirectoryPath';
 import assert = require('assert');
 import fs = require('fs');
 import cp = require('child_process');
@@ -6,7 +7,7 @@ import os = require('os');
 let filesystem = new Filesystem();
 let TMPDIR = os.tmpdir();
 
-describe('Filesystem', function() {
+describe('Filesystem', () => {
   var cleanup = () => { cp.exec('rm -rf ' + TMPDIR + '/a'); };
   before((done) => {
     cleanup(); 
@@ -22,7 +23,7 @@ describe('Filesystem', function() {
     done(); 
   });
 
-  it('mkdirSync: create nested set of dirs', function() {
+  it('mkdirSync: create nested set of dirs', () => {
     filesystem.mkdirSync(['a', 'b', 'c'], 0o777, TMPDIR);
     let stat = fs.statSync(TMPDIR + '/a/b/c');
     assert.ok(stat.isDirectory());
@@ -127,4 +128,23 @@ describe('Filesystem', function() {
     let stat = fs.statSync(path);
     assert.equal(stat.mode.toString(8), '100755');
   })
+});
+
+describe('DirectoryPath', () => {
+  it('iterable absolute path', () => {
+    let directoryPath = new DirectoryPath('/absolute/path/to/dir');
+    let dirs = [...directoryPath];
+    assert.equal('/absolute', dirs[0]);
+    assert.equal('path', dirs[1]);
+    assert.equal('to', dirs[2]);
+    assert.equal('dir', dirs[3]);
+  });
+    it('iterable relative path', () => {
+    let directoryPath = new DirectoryPath('relative/path/to/dir');
+    let dirs = [...directoryPath];
+    assert.equal('relative', dirs[0]);
+    assert.equal('path', dirs[1]);
+    assert.equal('to', dirs[2]);
+    assert.equal('dir', dirs[3]);
+  });
 });
