@@ -253,9 +253,7 @@ class Filesystem {
         return false;
     }
     /**
-     * @param mixed files
-     *
-     * @return traversable
+     * @return Iterable
      */
     makeIter(files) {
         if (typeof files === 'string' || typeof files === 'number') {
@@ -270,9 +268,6 @@ class Filesystem {
                     }
                 }
             })();
-        }
-        if (!Array.isArray(files)) {
-            files = [];
         }
         return files;
     }

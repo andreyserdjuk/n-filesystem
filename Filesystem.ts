@@ -296,9 +296,7 @@ export class Filesystem {
     }
 
     /**
-     * @param mixed files
-     *
-     * @return traversable
+     * @return Iterable
      */
     protected makeIter(files:Iterable<string>)
     {
@@ -312,13 +310,9 @@ export class Filesystem {
                 for (let i in files) {
                     if (files.hasOwnProperty(i)) {
                         yield files[i]; 
-                    } 
-                } 
+                    }
+                }
             })();
-        }
-
-        if (!Array.isArray(files)) {
-            files = [];
         }
 
         return files;
