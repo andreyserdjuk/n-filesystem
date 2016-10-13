@@ -2,6 +2,7 @@
 const fs = require('fs');
 const touch = require('touch');
 const path = require('path');
+const DirectoryPath_1 = require('./DirectoryPath');
 class Filesystem {
     /**
      * Copies a file.
@@ -38,10 +39,12 @@ class Filesystem {
      * @throws Error On any directory creation failure
      */
     mkdirSync(dirs, mode = 0o777, root = '') {
-        let path = root ? root : __dirname;
-        dirs = this.makeIter(dirs);
-        for (let dir of dirs) {
-            path = path.replace(/\/+$/, '') + '/' + dir;
+        let path = root ? root.replace(/\/+$/, '') : __dirname;
+        let dirsIterable = (typeof dirs === 'string')
+            ? new DirectoryPath_1.DirectoryPath(dirs)
+            : dirs;
+        for (let dir of dirsIterable) {
+            path += '/' + dir;
             if (fs.existsSync(path)) {
                 continue;
             }

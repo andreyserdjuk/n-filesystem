@@ -2,6 +2,7 @@ import * as readline from 'readline';
 import fs = require('fs');
 const touch = require('touch');
 import path = require('path');
+import {DirectoryPath} from './DirectoryPath';
 
 export class Filesystem {
 
@@ -44,13 +45,15 @@ export class Filesystem {
      *
      * @throws Error On any directory creation failure
      */
-    public mkdirSync(dirs:Iterable<string>, mode:number = 0o777, root:string = '')
+    public mkdirSync(dirs:Iterable<string>|string, mode:number = 0o777, root:string = '')
     {
-        let path = root? root : __dirname;
-        dirs = this.makeIter(dirs);
+        let path = root? root.replace(/\/+$/, '') : __dirname;
+        let dirsIterable = (typeof dirs === 'string')
+            ? new DirectoryPath(dirs) 
+            : dirs; 
 
-        for (let dir of dirs) {
-            path = path.replace(/\/+$/, '') + '/' + dir;
+        for (let dir of dirsIterable) {
+            path += '/' + dir;
             if (fs.existsSync(path)) {
                 continue;
             }
@@ -67,7 +70,7 @@ export class Filesystem {
      *
      * @return bool true if the file exists, false otherwise
      */
-    public existsSync(files:Iterable<string>)
+    public existsSync(files:Iterable<string>|string)
     {
         files = this.makeIter(files);
         
@@ -91,7 +94,7 @@ export class Filesystem {
      *
      * @throws Error When touch fails
      */
-    public touchSync(files:Array<string>|string, time:Date = null, atime:Date = null)
+    public touchSync(files:Iterable<string>|string, time:Date = null, atime:Date = null)
     {
         let options = {force: true},
             filesList = this.makeIter(files);
@@ -114,7 +117,7 @@ export class Filesystem {
      *
      * @param string|array|\Traversable files A filename, an array of files, or a \Traversable instance to remove
      */
-    public removeSync(files:Array<string>|string)
+    public removeSync(files:Iterable<string>|string)
     {
         let filesList = this.makeIter(files);
 
@@ -133,7 +136,7 @@ export class Filesystem {
      *
      * @throws IOException When the change fail
      */
-    public chmodSync(files:Array<string>|string, mode:number, umask:number = 0o000, recursive:boolean = false)
+    public chmodSync(files:Iterable<string>|string, mode:number, umask:number = 0o000, recursive:boolean = false)
     {
         let filesList = this.makeIter(files);
 
@@ -162,7 +165,7 @@ export class Filesystem {
      *
      * @throws IOException When the change fail
      */
-    public chownSync(files:Array<string>|string, uid:number, recursive:boolean = false)
+    public chownSync(files:Iterable<string>|string, uid:number, recursive:boolean = false)
     {
         let filesList = this.makeIter(files);
 
@@ -191,7 +194,7 @@ export class Filesystem {
      *
      * @throws IOException When the change fail
      */
-    public chgrpSync(files:Array<string>|string, gid:number, recursive:boolean = false)
+    public chgrpSync(files:Iterable<string>|string, gid:number, recursive:boolean = false)
     {
         let filesList = this.makeIter(files);
 

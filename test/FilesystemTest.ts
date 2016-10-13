@@ -23,8 +23,20 @@ describe('Filesystem', () => {
     done(); 
   });
 
-  it('mkdirSync: create nested set of dirs', () => {
+  it('mkdirSync: create nested set of dirs from array[\'a\', \'b\', \'c\'] of dirs', () => {
     filesystem.mkdirSync(['a', 'b', 'c'], 0o777, TMPDIR);
+    let stat = fs.statSync(TMPDIR + '/a/b/c');
+    assert.ok(stat.isDirectory());
+  });
+
+  it('mkdirSync: create nested set of dirs from string \'/a/b/c\' directory path', () => {
+    filesystem.mkdirSync('/a/b/c', 0o777, TMPDIR);
+    let stat = fs.statSync(TMPDIR + '/a/b/c');
+    assert.ok(stat.isDirectory());
+  });
+
+  it('mkdirSync: create nested set of dirs from DirectoryPath', () => {
+    filesystem.mkdirSync(new DirectoryPath('/a/b/c'), 0o777, TMPDIR);
     let stat = fs.statSync(TMPDIR + '/a/b/c');
     assert.ok(stat.isDirectory());
   });
